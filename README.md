@@ -1,10 +1,6 @@
 # explore-attention
 
-Attention Mechanisms in AI — with theory, code, visualizations, and real-world examples.
-
-## 📚 About the Project
-
-This repository is an educational toolkit for anyone looking to understand how attention works in deep learning, especially in NLP and vision models. It explores various types of attention mechanisms—from the original attention in sequence models to self-attention in Transformers and beyond. Each module is designed to teach by doing, with clear explanations, annotated code, and step-by-step visualizations.
+Attention Mechanisms in AI — A Comprehensive Guide
 
 ## 🧠 Understanding Attention
 
@@ -22,9 +18,9 @@ Attention is a mechanism that allows models to focus on different parts of the i
 
 The core of attention is the attention score computation:
 
-\[
-\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-\]
+```
+Attention(Q, K, V) = softmax(QK^T/√d_k)V
+```
 
 Where:
 - Q: Query matrix
@@ -39,141 +35,140 @@ Where:
 #### Additive Attention (Bahdanau)
 - Uses a feed-forward neural network to compute attention scores
 - More computationally expensive but can be more powerful
-- Implementation: [notebooks/01_foundations/01_basic_attention.ipynb](notebooks/01_foundations/01_basic_attention.ipynb)
+- Formula:
+```
+score(q, k) = v^T * tanh(W1*q + W2*k)
+```
 
 #### Multiplicative Attention (Luong)
 - Uses dot product between query and key vectors
 - More computationally efficient
-- Implementation: [notebooks/01_foundations/02_multiplicative_attention.ipynb](notebooks/01_foundations/02_multiplicative_attention.ipynb)
+- Formula:
+```
+score(q, k) = q^T * k
+```
 
 ### 2. Self-Attention
 
 Self-attention allows each position to attend to all positions in the sequence:
 
-\[
-\text{SelfAttention}(X) = \text{softmax}\left(\frac{XW_Q(XW_K)^T}{\sqrt{d_k}}\right)XW_V
-\]
+```
+SelfAttention(X) = softmax(XW_Q(XW_K)^T/√d_k)XW_V
+```
 
-Implementation: [notebooks/02_types/01_self_attention.ipynb](notebooks/02_types/01_self_attention.ipynb)
+Key components:
+1. Query projection: XW_Q
+2. Key projection: XW_K
+3. Value projection: XW_V
+4. Scaled dot-product: QK^T/√d_k
+5. Softmax normalization
+6. Weighted sum with values
 
 ### 3. Multi-Head Attention
 
 Multi-head attention allows the model to jointly attend to information from different representation subspaces:
 
-\[
-\text{MultiHead}(Q, K, V) = \text{Concat}(head_1, ..., head_h)W^O
-\]
+```
+MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^O
+```
 
 where each head is computed as:
 
-\[
-head_i = \text{Attention}(QW^Q_i, KW^K_i, VW^V_i)
-\]
-
-Implementation: [notebooks/02_types/02_multi_head_attention.ipynb](notebooks/02_types/02_multi_head_attention.ipynb)
+```
+head_i = Attention(QW^Q_i, KW^K_i, VW^V_i)
+```
 
 ### 4. Cross-Attention
 
 Cross-attention allows one sequence to attend to another sequence:
 
-\[
-\text{CrossAttention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
-\]
+```
+CrossAttention(Q, K, V) = softmax(QK^T/√d_k)V
+```
 
-Implementation: [notebooks/02_types/03_cross_attention.ipynb](notebooks/02_types/03_cross_attention.ipynb)
+## 🎨 Attention Visualizations
 
-## 🎨 Interactive Demos
+### 1. Basic Attention Pattern
+```
+Input: "The cat sat on the mat"
 
-### 1. Attention Visualization Tool
+Attention Weights:
+[0.8  0.1  0.0  0.0  0.0  0.1]  # "The"
+[0.1  0.7  0.1  0.0  0.0  0.1]  # "cat"
+[0.0  0.1  0.6  0.2  0.0  0.1]  # "sat"
+[0.0  0.0  0.2  0.6  0.1  0.1]  # "on"
+[0.0  0.0  0.0  0.1  0.7  0.2]  # "the"
+[0.1  0.1  0.1  0.1  0.2  0.4]  # "mat"
+```
 
-Explore how attention weights change with different inputs:
-[notebooks/03_demos/01_attention_visualizer.ipynb](notebooks/03_demos/01_attention_visualizer.ipynb)
+### 2. Multi-Head Attention Patterns
+Different heads can learn different patterns:
 
-### 2. GPT Attention Explorer
+Head 1 (Local attention):
+```
+[0.9  0.1  0.0  0.0  0.0  0.0]
+[0.1  0.8  0.1  0.0  0.0  0.0]
+[0.0  0.1  0.8  0.1  0.0  0.0]
+[0.0  0.0  0.1  0.8  0.1  0.0]
+[0.0  0.0  0.0  0.1  0.8  0.1]
+[0.0  0.0  0.0  0.0  0.1  0.9]
+```
 
-Visualize how GPT attends to previous tokens:
-[notebooks/03_demos/02_gpt_attention.ipynb](notebooks/03_demos/02_gpt_attention.ipynb)
+Head 2 (Global attention):
+```
+[0.3  0.2  0.2  0.1  0.1  0.1]
+[0.2  0.3  0.2  0.1  0.1  0.1]
+[0.2  0.2  0.3  0.1  0.1  0.1]
+[0.1  0.1  0.1  0.3  0.2  0.2]
+[0.1  0.1  0.1  0.2  0.3  0.2]
+[0.1  0.1  0.1  0.2  0.2  0.3]
+```
 
 ## 🌟 Applications
 
 ### 1. Machine Translation
-
-Attention revolutionized machine translation by allowing models to focus on relevant parts of the source sentence:
-[notebooks/04_applications/01_machine_translation.ipynb](notebooks/04_applications/01_machine_translation.ipynb)
+- Source sentence: "The cat sat on the mat"
+- Target sentence: "Le chat s'est assis sur le tapis"
+- Attention helps align words between languages
 
 ### 2. Image Recognition
-
-Vision Transformers (ViT) use attention to process images:
-[notebooks/04_applications/02_vision_transformers.ipynb](notebooks/04_applications/02_vision_transformers.ipynb)
+- Vision Transformers (ViT) use attention to process images
+- Patches attend to other patches to understand relationships
+- Example: Object detection with attention weights
 
 ### 3. Audio Processing
-
-Attention in speech recognition and audio classification:
-[notebooks/04_applications/03_audio_attention.ipynb](notebooks/04_applications/03_audio_attention.ipynb)
+- Speech recognition using attention
+- Audio classification with attention patterns
+- Example: Speaker diarization
 
 ### 4. Multimodal Systems
-
-Combining attention across different modalities:
-[notebooks/04_applications/04_multimodal_attention.ipynb](notebooks/04_applications/04_multimodal_attention.ipynb)
+- Combining attention across different modalities
+- Example: Image captioning with attention
 
 ## 🎓 Advanced Topics
 
-### 1. Building a Transformer
+### 1. Attention Variants
+- Sparse Attention
+- Linear Attention
+- Local Attention
+- Global Attention
 
-Step-by-step guide to building a Transformer from scratch:
-[notebooks/05_bonus/01_building_transformer.ipynb](notebooks/05_bonus/01_building_transformer.ipynb)
+### 2. Positional Information
+- Sinusoidal Positional Encoding
+- Learned Positional Encoding
+- Relative Positional Encoding
 
-### 2. Attention vs RNN
+### 3. Attention in Transformers
+- Encoder-Decoder Architecture
+- Layer Normalization
+- Feed-Forward Networks
+- Residual Connections
 
-Comparing performance and characteristics:
-[notebooks/05_bonus/02_attention_vs_rnn.ipynb](notebooks/05_bonus/02_attention_vs_rnn.ipynb)
+## 📚 Further Reading
 
-### 3. Explainability
-
-Understanding model decisions through attention:
-[notebooks/05_bonus/03_attention_explainability.ipynb](notebooks/05_bonus/03_attention_explainability.ipynb)
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.8+
-- PyTorch 2.0+
-- Jupyter Notebook
-- CUDA (optional, for GPU acceleration)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/explore-attention.git
-cd explore-attention
-
-# Create and activate virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-## 📁 Project Structure
-
-```
-explore-attention/
-├── notebooks/              # Jupyter notebooks for each attention mechanism
-│   ├── 01_foundations/    # Basic attention concepts
-│   ├── 02_types/          # Different attention mechanisms
-│   ├── 03_demos/          # Interactive visualizations
-│   └── 04_applications/   # Real-world applications
-├── src/                   # Source code for attention implementations
-│   ├── attention/         # Core attention mechanisms
-│   ├── models/           # Complete model implementations
-│   └── utils/            # Helper functions and visualizations
-├── data/                 # Sample data for examples
-├── tests/               # Unit tests
-└── docs/               # Additional documentation
-```
+1. "Attention Is All You Need" (Vaswani et al., 2017)
+2. "BERT: Pre-training of Deep Bidirectional Transformers" (Devlin et al., 2019)
+3. "An Image is Worth 16x16 Words: Transformers for Image Recognition" (Dosovitskiy et al., 2021)
 
 ## 🤝 Contributing
 
@@ -182,9 +177,3 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- The original "Attention Is All You Need" paper authors
-- The PyTorch team for their excellent documentation
-- The Hugging Face team for their transformers library
